@@ -2,6 +2,7 @@
 from __init__ import CURSOR, CONN
 from department import Department
 
+
 class Employee:
 
     # Dictionary of objects saved to the database.
@@ -14,10 +15,8 @@ class Employee:
         self.department_id = department_id
 
     def __repr__(self):
-        return (
-            f"<Employee {self.id}: {self.name}, {self.job_title}, " +
-            f"Department ID: {self.department_id}>"
-        )
+        return (f"<Employee {self.id}: {self.name}, {self.job_title}, " +
+                f"Department ID: {self.department_id}>")
 
     @property
     def name(self):
@@ -28,9 +27,7 @@ class Employee:
         if isinstance(name, str) and len(name):
             self._name = name
         else:
-            raise ValueError(
-                "Name must be a non-empty string"
-            )
+            raise ValueError("Name must be a non-empty string")
 
     @property
     def job_title(self):
@@ -41,9 +38,7 @@ class Employee:
         if isinstance(job_title, str) and len(job_title):
             self._job_title = job_title
         else:
-            raise ValueError(
-                "job_title must be a non-empty string"
-            )
+            raise ValueError("job_title must be a non-empty string")
 
     @property
     def department_id(self):
@@ -102,8 +97,8 @@ class Employee:
             SET name = ?, job_title = ?, department_id = ?
             WHERE id = ?
         """
-        CURSOR.execute(sql, (self.name, self.job_title,
-                             self.department_id, self.id))
+        CURSOR.execute(
+            sql, (self.name, self.job_title, self.department_id, self.id))
         CONN.commit()
 
     def delete(self):
@@ -115,7 +110,7 @@ class Employee:
             WHERE id = ?
         """
 
-        CURSOR.execute(sql, (self.id,))
+        CURSOR.execute(sql, (self.id, ))
         CONN.commit()
 
         # Delete the dictionary entry using id as the key
@@ -170,7 +165,7 @@ class Employee:
             WHERE id = ?
         """
 
-        row = CURSOR.execute(sql, (id,)).fetchone()
+        row = CURSOR.execute(sql, (id, )).fetchone()
         return cls.instance_from_db(row) if row else None
 
     @classmethod
@@ -181,10 +176,13 @@ class Employee:
             FROM employees
             WHERE name is ?
         """
-
-        row = CURSOR.execute(sql, (name,)).fetchone()
+        row = CURSOR.execute(sql, (name, )).fetchone()
         return cls.instance_from_db(row) if row else None
 
     def reviews(self):
         """Return list of reviews associated with current employee"""
-        pass
+        from review import Review
+        return [
+            review for review in Review.all.values()
+            if review.employee_id == self.id
+        ]
