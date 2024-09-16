@@ -15,10 +15,8 @@ class Review:
         self.employee_id = employee_id
 
     def __repr__(self):
-        return (
-            f"<Review {self.id}: {self.year}, {self.summary}, "
-            + f"Employee: {self.employee_id}>"
-        )
+        return (f"<Review {self.id}: {self.year}, {self.summary}, " +
+                f"Employee: {self.employee_id}>")
 
     @classmethod
     def create_table(cls):
@@ -47,19 +45,23 @@ class Review:
         """ Insert a new row with the year, summary, and employee id values of the current Review object.
         Update object id attribute using the primary key value of new row.
         Save the object in local dictionary using table row's PK as dictionary key"""
-        pass
+        sql = """
+            INSERT INTO reviews (year, summary, employee_id)
+            VALUES (? ? ?)
+        """
+        CURSOR.execute(sql, (self.year, self.summary, self.employee_id))
+        CONN.commit()
 
     @classmethod
     def create(cls, year, summary, employee_id):
         """ Initialize a new Review instance and save the object to the database. Return the new instance. """
         pass
-   
+
     @classmethod
     def instance_from_db(cls, row):
         """Return an Review instance having the attribute values from the table row."""
         # Check the dictionary for  existing instance using the row's primary key
         pass
-   
 
     @classmethod
     def find_by_id(cls, id):
@@ -79,4 +81,3 @@ class Review:
     def get_all(cls):
         """Return a list containing one Review instance per table row"""
         pass
-
