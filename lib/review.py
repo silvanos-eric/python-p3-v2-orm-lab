@@ -52,6 +52,9 @@ class Review:
         CURSOR.execute(sql, (self.year, self.summary, self.employee_id))
         CONN.commit()
 
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
+
     @classmethod
     def create(cls, year, summary, employee_id):
         """ Initialize a new Review instance and save the object to the database. Return the new instance. """
